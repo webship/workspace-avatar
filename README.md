@@ -20,6 +20,13 @@ The settings file and the docs are placed once and never overwritten: they hold 
 
 | Command |
 | --- |
-| (none) |
+| `cmd-avatar-project.sh` |
+| `cmd-tools-avatar-agent.sh` |
+| `cmd-tools-avatar-catalog.sh` |
+| `cmd-tools-avatar-character.sh` |
+| `cmd-tools-avatar-voice.sh` |
+| `cmd-tools-reclaim.sh` |
+| `cmd-tools-remove.sh` |
+| `cmd-tools-screen.sh` |
 
 The bash functions these commands call live in the dashboard's `core/scripts/functions`.
