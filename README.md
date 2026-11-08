@@ -1,4 +1,4 @@
-# @webship/workspace-avatar
+# @webship.co/workspace-avatar
 
 The **Avatars** workspace of the [Webship Workspace](https://github.com/webship/workspace) dashboard:
 the `avatars/` folder (type `code`), its settings file (`core/config/workspace.avatars.settings.yml`),
