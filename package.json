@@ -1,6 +1,6 @@
 {
   "name": "@webship.co/workspace-avatar",
-  "version": "1.0.0-alpha1",
+  "version": "1.0.0-beta1",
   "description": "The Avatars workspace for Webship Workspace: the `avatars/` folder (type code), its settings file, its 8 commands and its docs, activated as a plugin.",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -51,7 +51,7 @@
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
-    "@webship.co/workspace-plugin-api": "^1.0.0-alpha1",
+    "@webship.co/workspace-plugin-api": "^1.0.0-beta1",
     "typescript": "^5.9.0"
   },
   "publishConfig": {
