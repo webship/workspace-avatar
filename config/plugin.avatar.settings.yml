@@ -1,5 +1,13 @@
 # Avatars: core/config/plugin.avatar.settings.yml
 #
+# The camera: show the assistant something. It opens only on your own click on the camera button, with
+# the browser's own permission question, and its window says "Camera on" for as long as it is. The
+# preview never leaves the browser; one still picture is sent when you press "Look at this", for the one
+# turn it goes with, and is deleted when the answer has come. Nothing is recorded.
+camera:
+  # The camera button in the avatar's tools. false removes it, and the dashboard refuses any picture.
+  enabled: true
+
 # Speech for the AI Assistant: talk to it and hear it answer. English only.
 #
 # Nothing here turns the microphone on. That is always your own click on a talk button, with the

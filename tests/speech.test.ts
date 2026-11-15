@@ -239,7 +239,7 @@ test('the manifest ships the speech files, every setting has a label, and the co
   assert.strictEqual(pkg.optionalDependencies['sherpa-onnx-node'], '1.13.8', 'the engine is optional and pinned');
   assert.ok(!pkg.dependencies || !pkg.dependencies['sherpa-onnx-node']);
   const template = fs.readFileSync(path.join(PKG, m.settingsTemplate), 'utf8');
-  const keys = [...template.matchAll(/^  ([a-z_]+):/gm)].map((x) => `speech.${x[1]}`);
+  const keys = [...template.slice(template.indexOf('\nspeech:')).matchAll(/^  ([a-z_]+):/gm)].map((x) => `speech.${x[1]}`);
   const labels = fs.readFileSync(path.join(PKG, m.labels), 'utf8');
   for (const k of keys) assert.match(labels, new RegExp(`^${k.replace('.', '\\.')}:$`, 'm'), `${k} has a label`);
   assert.strictEqual(keys.length, 16);
