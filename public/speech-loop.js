@@ -369,7 +369,13 @@
       window.wsAssistantEar = { hold, keep, keeping };
       if (talkBtn) talkBtn.hidden = false;
       if (keepBtn) keepBtn.hidden = !s.handsFree;
-    } else if (s.microphone && talkBtn && keepBtn && talkBtn.hidden) {
+    } else if (!s.microphone) {
+      // Switched off in the settings: the talk buttons go, and the Space bar and the dock listen to nothing
+      // (an ear that does nothing, so the browser's own recogniser is not used in its place).
+      window.wsAssistantEar = { hold() {}, keep() {}, keeping: () => false };
+      if (talkBtn) talkBtn.hidden = true;
+      if (keepBtn) keepBtn.hidden = true;
+    } else if (talkBtn && keepBtn && talkBtn.hidden) {
       notice(`To talk to the assistant, install the local recogniser: ${cfg.install}`, 12000);
     }
     window.wsSpeech = {

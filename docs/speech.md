@@ -70,6 +70,12 @@ changes, with its red dot; a new tab starts with the microphone closed.
 | `speech.silence_ms` | `900` | The silence that ends a phrase |
 | `speech.language` | `en-US` | `en-US` or `en-GB`, for the browser's engines |
 
+A switch is read at each page load and at each request: change it and reload the page, with no restart.
+With `speech.microphone: false` the talk buttons and the Space bar listen to nothing at all, the
+browser's own recogniser included, and the dashboard answers 403 to any audio. The small microphone
+inside the prompt box (dictation into the box, the browser's recogniser) is the dashboard's own:
+`assistant.voice_input` in `core/config/settings.yml`.
+
 ## The models and their licences
 
 Nothing is shipped with the plugin: `-a install` downloads what you ask for into `avatars/.speech/`
