@@ -42,3 +42,13 @@ bash cmd-tools-screen.sh --help
   <project>`, never `rm -rf`.
 
 The full architecture is in `products/workspace/CLAUDE.md`.
+
+## AI items for this folder
+
+The plugin of this folder (`@webship.co/workspace-avatar`) places its own AI items in the AI folders of the
+workspace, when they are active:
+
+- `avatars-character-maker` (`ai-agents/`): Builds and furnishes a talking AI character in `avatars/`: the project, its characters (body, voice, persona), its voices, the agent that is its mind; records every licence, spends no credits unasked
+- `avatars-workflow` (`ai-skills/`): How work is done in `avatars/`: what may be used, the project, a voice, the character, its mind; every command with its flags, the `avatar` settings keys
+- `/avatars-add-character` (`ai-commands/`): `/avatars-add-character <project> <id> <name> [model]`: checks the project and the licence of the body, adds the character with a free voice and says what it used
+- `avatars-build-a-character` (`ai-prompts/`): A new session that builds a talking AI character: a body it may use, a free voice and a mind

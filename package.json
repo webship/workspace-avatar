@@ -1,7 +1,7 @@
 {
   "name": "@webship.co/workspace-avatar",
   "version": "1.0.8",
-  "description": "The Avatars workspace for Webship Workspace: the `avatars/` folder (type code), its settings file, its 8 commands and its docs, activated as a plugin.",
+  "description": "The Avatars workspace for Webship Workspace: the `avatars/` folder (type code), its settings file, its 8 commands, its docs and its AI items (an agent, a skill, a command and a prompt, each in the folder of its kind), activated as a plugin.",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "license": "ISC",
@@ -11,6 +11,7 @@
   },
   "files": [
     "dist/src",
+    "ai",
     "commands",
     "config",
     "docs",
@@ -26,6 +27,12 @@
   "workspacePlugin": {
     "name": "avatar",
     "label": "Avatars",
+    "needs": [
+      "ai-agents",
+      "ai-skills",
+      "ai-commands",
+      "ai-prompts"
+    ],
     "workspace": {
       "key": "avatars",
       "settingsTemplate": "config/workspace.avatars.settings.yml",
@@ -43,6 +50,20 @@
         "docs/AGENTS.md",
         "docs/CLAUDE.md",
         "docs/README.md"
+      ]
+    },
+    "ai": {
+      "agents": [
+        "ai/agents/avatars-character-maker.md"
+      ],
+      "skills": [
+        "ai/skills/avatars-workflow"
+      ],
+      "commands": [
+        "ai/commands/avatars-add-character.md"
+      ],
+      "prompts": [
+        "ai/prompts/avatars-build-a-character.md"
       ]
     },
     "features": [
