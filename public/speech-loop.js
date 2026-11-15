@@ -394,6 +394,8 @@
       config: cfg, engines: { stt, tts }, trace,
       state: () => state, mode: () => mode,
       stop: () => allOff(''), speak: (text) => { expecting = false; speakText(String(text || '')); },
+      // Stop the voice and leave the microphone as it is.
+      quiet: () => { stopSpeaking(); if (state === 'speaking') settle(''); },
     };
     setState('off');
     mark('ready', { stt, tts });
