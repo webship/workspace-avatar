@@ -133,6 +133,8 @@ test('settings: every key has a default, strings from bash are read, and nothing
   assert.strictEqual(s.silenceMs, 300);
   assert.strictEqual(s.followUpSeconds, 12);
   assert.strictEqual(s.language, 'en-GB');
+  assert.strictEqual(speechSettings({ speech: { acknowledge: 'no', acknowledge_after_ms: '50' } }).acknowledge, false);
+  assert.strictEqual(speechSettings({ speech: { acknowledge_after_ms: '50' } }).acknowledgeAfterMs, 1000);
   assert.strictEqual(speechSettings({ speech: { language: 'ar-JO' } }).language, 'en-US', 'English only');
 });
 
@@ -242,7 +244,7 @@ test('the manifest ships the speech files, every setting has a label, and the co
   const keys = [...template.slice(template.indexOf('\nspeech:')).matchAll(/^  ([a-z_]+):/gm)].map((x) => `speech.${x[1]}`);
   const labels = fs.readFileSync(path.join(PKG, m.labels), 'utf8');
   for (const k of keys) assert.match(labels, new RegExp(`^${k.replace('.', '\\.')}:$`, 'm'), `${k} has a label`);
-  assert.strictEqual(keys.length, 16);
+  assert.strictEqual(keys.length, 18);
   // The template's values are the defaults the code has.
   const d = speechSettings({});
   assert.match(template, new RegExp(`stt_model: ${d.sttModel.replace('.', '\\.')}$`, 'm'));
@@ -256,8 +258,10 @@ test('privacy, as code: one place opens the microphone, nothing records or store
   assert.match(loop, /async function openMic\(\) \{[\s\S]{0,200}getUserMedia\(/);
   // openMic is reached from the two buttons, and from the same-tab resume once the browser says the permission stands.
   assert.deepStrictEqual([...loop.matchAll(/await openMic\(\)/g)].length, 2);
-  assert.match(loop, /p\.state === 'granted'\) resume\(\)/);
-  for (const never of ['MediaRecorder', 'localStorage', 'indexedDB', 'video:', 'xi-api-key', 'elevenlabs', 'api_key']) {
+  assert.match(loop, /if \(p\.state === 'granted'\) return go\(\);/);
+  assert.match(loop, /const carried = Date\.now\(\) - Number\(store\.get\(KEEP\) \|\| 0\) < CARRY_MS;/, 'only a page left a few seconds ago carries the microphone over');
+  assert.match(loop, /store\.set\(REST, null\); store\.set\(KEEP, null\);/, 'and only once');
+  for (const never of ['MediaRecorder', 'localStorage', 'sessionStorage', 'indexedDB', 'video:', 'xi-api-key', 'elevenlabs', 'api_key']) {
     for (const f of ['speech-loop.js', 'speech-core.js', 'speech-speak.js']) assert.ok(!fs.readFileSync(path.join(PKG, 'public', f), 'utf8').includes(never), `${f} has no ${never}`);
   }
   assert.match(loop, /silent\.gain\.value = 0/, 'the microphone is never played back');
@@ -284,7 +288,7 @@ test('each switch is honoured in the page as well as on the server', () => {
   assert.match(loop, /if \(keepBtn\) keepBtn\.hidden = !s\.handsFree;/);
   assert.match(loop, /async function keep\(on\) \{\s+if \(!stt \|\| !s\.handsFree\) return;/);
   // conversation: off closes the microphone after one phrase.
-  assert.match(loop, /if \(mode === 'keep' && !s\.conversation\) \{ mode = 'off'; store\.set\(KEEP, null\); closeMic\(\); \}/);
+  assert.match(loop, /if \(mode === 'keep' && !s\.conversation\) \{ mode = 'off'; closeMic\(\); \}/);
   // speaking: no voice is created.
   assert.match(loop, /const mouth = s\.speaking && window\.wsSpeechMouth \?/);
   // wake_word and stop_word.

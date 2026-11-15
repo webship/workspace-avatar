@@ -12,6 +12,8 @@ export interface SpeechSettings {
   conversation: boolean;    // after an answer, listen again
   speaking: boolean;        // the answer is spoken, sentence by sentence
   bargeIn: boolean;         // talking over the voice stops it
+  acknowledge: boolean;     // hands-free, a few words ("One moment.") when the answer takes a while
+  acknowledgeAfterMs: number;
   wakeWord: boolean;        // only speech that starts with the wake phrase is acted on
   wakePhrase: string;
   followUpSeconds: number;  // after an answer, this long without needing the wake phrase again
@@ -31,6 +33,8 @@ export const SPEECH_DEFAULTS: SpeechSettings = {
   conversation: true,
   speaking: true,
   bargeIn: true,
+  acknowledge: true,
+  acknowledgeAfterMs: 3000,
   wakeWord: false,
   wakePhrase: 'workspace',
   followUpSeconds: 12,
@@ -82,6 +86,8 @@ export function speechSettings(raw: unknown): SpeechSettings {
     conversation: bool(s.conversation, d.conversation),
     speaking: bool(s.speaking, d.speaking),
     bargeIn: bool(s.barge_in, d.bargeIn),
+    acknowledge: bool(s.acknowledge, d.acknowledge),
+    acknowledgeAfterMs: num(s.acknowledge_after_ms, d.acknowledgeAfterMs, 1000, 20000),
     wakeWord: bool(s.wake_word, d.wakeWord),
     wakePhrase: phrase(s.wake_phrase, d.wakePhrase),
     followUpSeconds: num(s.follow_up_seconds, d.followUpSeconds, 0, 120),

@@ -115,11 +115,40 @@
       return true;
     }
 
+    /**
+     * A few words said on the side, while the assistant is still thinking ("One moment."): no state
+     * changes, nothing is told to the page, and the answer's own voice cuts it short when it comes.
+     */
+    function aside(text) {
+      const words = String(text || '').trim().slice(0, 80);
+      if (!engine || !words || speaking) return false;
+      const mine = gen;
+      mark('aside', { text: words });
+      if (engine === 'browser') {
+        if (!window.speechSynthesis || !window.SpeechSynthesisUtterance) return false;
+        const u = new window.SpeechSynthesisUtterance(words);
+        u.lang = s.language; u.rate = s.speed;
+        window.speechSynthesis.speak(u);
+        return true;
+      }
+      fetchClip(words).then((c) => out().decodeAudioData(c.buf)).then((audio) => {
+        if (mine !== gen || speaking) return;
+        const ctx = out();
+        const src = ctx.createBufferSource();
+        src.buffer = audio;
+        src.connect(ctx.destination);
+        src.onended = () => { if (playing === src) playing = null; };
+        playing = src;
+        src.start();
+      }).catch(() => { /* a courtesy: silence is fine */ });
+      return true;
+    }
+
     // Load the voice before it is needed (while the assistant thinks), so the first sentence does not wait for it.
     let warmed = false;
     const warm = () => { if (engine !== 'local' || warmed) return; warmed = true; fetchClip('Ready.').catch(() => { warmed = false; }); };
 
-    return { engine, speak, stop, warm, rest: () => left.join(' '), get speaking() { return speaking; } };
+    return { engine, speak, stop, warm, aside, rest: () => left.join(' '), get speaking() { return speaking; } };
   }
 
   window.wsSpeechMouth = { create };
