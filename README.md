@@ -70,6 +70,13 @@ and **Camera on**; **Look at this** sends one still picture with the next thing 
 deleted when the answer comes. Opened only by a press, never recorded, switched by `camera.enabled`.
 What goes where: [docs/camera.md](docs/camera.md).
 
+## The reading window
+
+The avatar's reading window gets the sites of this workspace, a page's sections, **Read section**,
+**Section to the board**, and for your own sites **Picture to the board** and **Test this site** (the
+project's Webship-js tests, through its folder's own testing command). A site out on the web is only
+read. What it will and will not do: [docs/browser.md](docs/browser.md).
+
 ## Speech for the AI Assistant
 
 Talk to the assistant and hear it answer, speech to speech: Hold to talk, Keep listening (hands-free,

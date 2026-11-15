@@ -1,0 +1,22 @@
+/* The reading window's second row of tools. */
+.ws-browser-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border-default, rgba(127, 127, 127, 0.3));
+  font-size: 0.8125rem;
+}
+.ws-browser-tools select {
+  max-width: 16rem;
+  font: inherit;
+  padding: 2px 4px;
+  border-radius: 6px;
+  border: 1px solid var(--border-default, rgba(127, 127, 127, 0.4));
+  background: var(--surface-default, #fff);
+  color: inherit;
+}
+.ws-browser-tools [hidden] { display: none; }
+.ws-browser-said { flex: 1 1 100%; min-height: 1.2em; color: var(--text-subtle, #667); }
+.ws-browser-said:empty { display: none; }

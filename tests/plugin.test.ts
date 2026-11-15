@@ -20,9 +20,11 @@ test('the manifest names the workspace folder, and every file it names ships', (
 test('register() adds the assistant context, the speech config fragment and the uploads', () => {
   const calls: string[] = [];
   const uploads: string[] = [];
+  const actions: string[] = [];
   let fragment: ((ctx: any) => unknown) | null = null;
   const api: any = {
-    name: 'avatar', lib: { ROOT: path.join(PKG, 'no-such-workspace') }, settings: { read: () => ({}) }, capabilities: new Set(['uploads']),
+    name: 'avatar', lib: { ROOT: path.join(PKG, 'no-such-workspace'), localSite: () => null, readerAllowed: async () => '' }, settings: { read: () => ({}) }, capabilities: new Set(['uploads']),
+    addAction: (name: string) => actions.push(name),
     addAssistantContext: (fn: () => string) => calls.push(fn()),
     addFragment: (fn: (ctx: any) => unknown) => { fragment = fn; },
     addUpload: (name: string) => uploads.push(name),
@@ -30,7 +32,8 @@ test('register() adds the assistant context, the speech config fragment and the 
   register(api);
   assert.strictEqual(calls.length, 1);
   assert.match(calls[0], /avatars\//);
-  assert.deepStrictEqual(uploads, ['hear', 'speak', 'board-save', 'look', 'look-forget']);
+  assert.deepStrictEqual(uploads, ['hear', 'speak', 'board-save', 'look', 'look-forget', 'site-snap']);
+  assert.deepStrictEqual(actions, ['site-test']);
   let sent = '';
   const res: any = { writeHead: () => res, end: (b: string) => { sent = b; } };
   fragment!({ rest: 'speech/config', res });
@@ -40,6 +43,6 @@ test('register() adds the assistant context, the speech config fragment and the 
 });
 
 test('on a dashboard without the upload hook the plugin still registers', () => {
-  const api: any = { name: 'avatar', lib: { ROOT: '/nowhere' }, settings: { read: () => ({}) }, addAssistantContext: () => undefined, addFragment: () => undefined };
+  const api: any = { name: 'avatar', lib: { ROOT: '/nowhere' }, settings: { read: () => ({}) }, addAssistantContext: () => undefined, addFragment: () => undefined, addAction: () => undefined };
   assert.doesNotThrow(() => register(api));
 });
