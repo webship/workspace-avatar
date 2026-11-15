@@ -1,0 +1,85 @@
+# Labels for core/config/plugin.avatar.settings.yml, merged into the Settings page.
+speech.microphone:
+  label: Talk buttons
+  info: Hold to talk and Keep listening in the assistant. Off removes them, and the dashboard refuses any audio. The microphone itself only opens on your own click, with the browser's permission question.
+  options:
+    "true": "On: the talk buttons are offered"
+    "false": "Off: nothing can listen"
+speech.hands_free:
+  label: Keep listening (hands-free)
+  info: Each phrase is cut at a short silence and sent, without holding a button. Off leaves Hold to talk only.
+  options:
+    "true": "On"
+    "false": "Off: hold to talk only"
+speech.conversation:
+  label: Conversation mode
+  info: After an answer is spoken the assistant listens for the next turn, until you say the stop word or press Stop. Off sends one phrase and closes the microphone.
+  options:
+    "true": "On: turn after turn"
+    "false": "Off: one phrase at a time"
+speech.speaking:
+  label: Speak the answers
+  info: The answer is spoken sentence by sentence while you talk to the assistant. Off keeps the answers silent (the voice summary switch in the assistant is a separate thing).
+  options:
+    "true": "On"
+    "false": "Off"
+speech.barge_in:
+  label: Interrupt by talking
+  info: Start talking while the answer is spoken and the voice stops to listen. Use headphones if the voice interrupts itself through the loudspeakers.
+  options:
+    "true": "On"
+    "false": "Off: the voice finishes first"
+speech.wake_word:
+  label: Wake word
+  info: Only speech that begins with the wake phrase is acted on; everything else is heard and let go. For a room where other people talk.
+  options:
+    "false": "Off: everything said is sent"
+    "true": "On: only after the wake phrase"
+speech.wake_phrase:
+  label: Wake phrase
+  info: One or two English words said first, such as "workspace" or "hey workspace".
+speech.follow_up_seconds:
+  label: Follow-up time
+  info: After an answer, how long the wake phrase is not needed again.
+  number: { min: 0, max: 120, step: 1, unit: seconds }
+speech.stop_word:
+  label: Stop word
+  info: Said on its own, it stops the voice and turns the microphone off.
+speech.stt_engine:
+  label: Speech to text engine
+  info: Local transcribes on this machine and the audio never leaves it (install the model first). Browser uses the browser's own recogniser, which sends the audio to the browser vendor's speech service. Auto takes local when it is installed.
+  options:
+    auto: "Auto: local when installed, else the browser's"
+    local: "Local: a model on this machine"
+    browser: "Browser: the browser's own recogniser"
+speech.stt_model:
+  label: Local recogniser
+  info: The installed model to transcribe with. whisper-base.en is the most accurate of the three, whisper-tiny.en the smallest, moonshine-tiny-en the fastest.
+  options:
+    whisper-base.en: "Whisper base.en (160 MB, most accurate)"
+    whisper-tiny.en: "Whisper tiny.en (104 MB)"
+    moonshine-tiny-en: "Moonshine tiny (120 MB, fastest)"
+speech.tts_engine:
+  label: Text to speech engine
+  info: Local speaks with a Piper voice on this machine. Browser uses the voices the browser has. Auto takes local when a voice is installed. No paid voice is used for speech to speech.
+  options:
+    auto: "Auto: local when installed, else the browser's"
+    local: "Local: a Piper voice on this machine"
+    browser: "Browser: the browser's own voice"
+speech.voice:
+  label: Local voice
+  info: An installed Piper voice, by name, such as en_US-ljspeech-medium or en_GB-alan-medium. Each voice has its own licence in its MODEL_CARD.
+speech.speed:
+  label: Speaking speed
+  info: 1 is the voice's own pace.
+  number: { min: 0.5, max: 2, step: 0.05 }
+speech.silence_ms:
+  label: Silence that ends a phrase
+  info: Shorter answers faster and may cut a slow speaker; longer waits for you to finish.
+  number: { min: 300, max: 3000, step: 50, unit: ms }
+speech.language:
+  label: Language
+  info: What the browser's own recogniser and voice are asked for. English only.
+  options:
+    en-US: "English (United States)"
+    en-GB: "English (United Kingdom)"

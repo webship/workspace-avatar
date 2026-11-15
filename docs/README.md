@@ -27,6 +27,20 @@ bash cmd-tools-avatar-catalog.sh                         # voice engines, with l
 bash cmd-tools-remove.sh my-avatar                       # ddev delete, then the folder
 ```
 
+## Talk to the AI Assistant
+
+The assistant in the dashboard can be talked to and can answer aloud, with a recogniser and a voice on
+this machine: free, no key, and the audio never leaves it. Each part has its own switch.
+
+```bash
+bash cmd-tools-avatar-speech.sh -a install    # the local recogniser and voice (about 240 MB)
+bash cmd-tools-avatar-speech.sh               # what is installed
+```
+
+Hold **Hold to talk** in the assistant, or press **Keep listening**. The microphone opens only on your
+press, a red dot shows while it is open, and nothing is recorded. The engines, where the audio goes and
+the switches: `speech.md` in the plugin's docs.
+
 ## How the pieces connect
 
 - **Body**: a VRM model in the project's `public/models/`. `--model osa:<name>` fetches one from

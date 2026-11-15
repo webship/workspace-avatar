@@ -24,6 +24,7 @@ bash cmd-tools-avatar-agent.sh --help
 bash cmd-tools-avatar-catalog.sh --help
 bash cmd-tools-avatar-character.sh --help
 bash cmd-tools-avatar-voice.sh --help
+bash cmd-tools-avatar-speech.sh --help
 bash cmd-tools-reclaim.sh --help
 bash cmd-tools-remove.sh --help
 bash cmd-tools-screen.sh --help
@@ -34,6 +35,7 @@ bash cmd-tools-screen.sh --help
 - **Containers only (DDEV by default).** The app runs in its web container; never run `node` or `npm` for it on the host.
 - **A hostname belongs to one project.** A new avatar project drops any extra hostname the avatar app
   repository declares (`cmd-avatar-project.sh` does), so two avatars never answer on one address.
+- **The microphone is the person's.** Speech for the assistant is switched part by part in `core/config/plugin.avatar.settings.yml`; never turn a switch on for someone, and never record or save what is said.
 - **ElevenLabs spends money.** Never link a key or design a voice without the person asking.
 - **Licences are per model and per voice.** Record the credit and licence with every character, and never
   publish a fan-made or "author only" model.

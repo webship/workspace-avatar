@@ -17,10 +17,29 @@ test('the manifest names the workspace folder, and every file it names ships', (
   for (const f of m.workspace.files) assert.match(fs.readFileSync(path.join(PKG, f), 'utf8'), /^#!\/usr\/bin\/env bash/, `${f} is a bash script`);
 });
 
-test('register() adds the assistant context and nothing else', () => {
+test('register() adds the assistant context, the speech config fragment and the two speech uploads', () => {
   const calls: string[] = [];
-  const api: any = { name: 'avatar', addAssistantContext: (fn: () => string) => calls.push(fn()) };
+  const uploads: string[] = [];
+  let fragment: ((ctx: any) => unknown) | null = null;
+  const api: any = {
+    name: 'avatar', lib: { ROOT: path.join(PKG, 'no-such-workspace') }, settings: { read: () => ({}) }, capabilities: new Set(['uploads']),
+    addAssistantContext: (fn: () => string) => calls.push(fn()),
+    addFragment: (fn: (ctx: any) => unknown) => { fragment = fn; },
+    addUpload: (name: string) => uploads.push(name),
+  };
   register(api);
   assert.strictEqual(calls.length, 1);
   assert.match(calls[0], /avatars\//);
+  assert.deepStrictEqual(uploads, ['hear', 'speak']);
+  let sent = '';
+  const res: any = { writeHead: () => res, end: (b: string) => { sent = b; } };
+  fragment!({ rest: 'speech/config', res });
+  const config = JSON.parse(sent);
+  assert.strictEqual(config.settings.microphone, true);
+  assert.strictEqual(config.stt.local, false, 'no model in an empty workspace');
+});
+
+test('on a dashboard without the upload hook the plugin still registers', () => {
+  const api: any = { name: 'avatar', lib: { ROOT: '/nowhere' }, settings: { read: () => ({}) }, addAssistantContext: () => undefined, addFragment: () => undefined };
+  assert.doesNotThrow(() => register(api));
 });
