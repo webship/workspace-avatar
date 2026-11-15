@@ -41,6 +41,16 @@ speech.barge_in:
   options:
     "true": "On"
     "false": "Off: the voice finishes first"
+speech.acknowledge:
+  label: Say it was heard
+  info: With Keep listening on, the voice says a few words ("One moment.", "Let me check.") when the answer takes a while, so you know you were heard without looking at the page. Never after Hold to talk.
+  options:
+    "true": "On"
+    "false": "Off: silence until the answer"
+speech.acknowledge_after_ms:
+  label: Wait before saying so
+  info: How long the answer may take before the voice says it was heard.
+  number: { min: 1000, max: 20000, step: 500, unit: ms }
 speech.wake_word:
   label: Wake word
   info: Only speech that begins with the wake phrase is acted on; everything else is heard and let go. For a room where other people talk.

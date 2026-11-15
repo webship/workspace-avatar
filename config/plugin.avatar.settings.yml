@@ -37,6 +37,9 @@ speech:
   speaking: true
   # Start talking while the answer is spoken and the voice stops to listen.
   barge_in: true
+  # With Keep listening on, a few words ("One moment.") when the answer takes longer than this.
+  acknowledge: true
+  acknowledge_after_ms: 3000
   # Only speech that begins with the wake phrase is acted on; the rest is heard and let go.
   wake_word: false
   wake_phrase: workspace

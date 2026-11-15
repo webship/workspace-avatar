@@ -21,7 +21,8 @@ Everything these tools add is under the board's own **Undo** and **Clear**.
 
 ## What is kept, and where
 
-A board stays in this browser. Its pages (the drawing, the lines, the notes) are kept in the browser's
+A board stays in this browser, and each workspace's page has a board of its own (its address is its
+own). Its pages (the drawing, the lines, the notes) are kept in the browser's
 own storage, so closing the board, a reload or the next day brings them back on this computer; nothing
 is sent anywhere. A picture put on the board is read by the browser and is part of the page. When the
 pages with their pictures are too large for the browser's storage, the pages are kept without the pictures.

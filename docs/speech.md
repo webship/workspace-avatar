@@ -44,8 +44,11 @@ is a separate setting of the dashboard and is only used when you pick it.
 
 The microphone is opened by your press and by nothing else. While the assistant is thinking nothing
 is heard. Phrases are never written to disk, and the transcript of what you said is only what you see
-in the conversation, like a typed turn. In the same browser tab, Keep listening stays on when a page
-changes, with its red dot; a new tab starts with the microphone closed.
+in the conversation, like a typed turn. When a page is left with Keep listening on (the
+assistant took you to another page, or you went yourself), the next page goes on listening, with its red
+dot, if it opens within fifteen seconds; a page opened later starts with the microphone closed. Each
+workspace's page has an address of its own, and the browser asks its permission question once for each:
+where it has not been allowed yet, the page says so and waits for your press.
 
 ## The switches
 
@@ -58,6 +61,8 @@ changes, with its red dot; a new tab starts with the microphone closed.
 | `speech.conversation` | `true` | After an answer, listen again. `false` closes the microphone after one phrase |
 | `speech.speaking` | `true` | The answer is spoken, sentence by sentence |
 | `speech.barge_in` | `true` | Talking over the voice stops it |
+| `speech.acknowledge` | `true` | With Keep listening on, a few words ("One moment.") when the answer takes a while |
+| `speech.acknowledge_after_ms` | `3000` | How long the answer may take before that |
 | `speech.wake_word` | `false` | Only speech that begins with the wake phrase is acted on |
 | `speech.wake_phrase` | `workspace` | The wake phrase |
 | `speech.follow_up_seconds` | `12` | After an answer, how long the wake phrase is not needed again |
@@ -100,7 +105,9 @@ bash cmd-tools-avatar-speech.sh -a remove --voice en_GB-alan-medium
 
 1. You stop talking. After the silence that ends a phrase (0.9 s, `speech.silence_ms`) the phrase is
    transcribed: about 0.3 s for a short sentence.
-2. The assistant thinks: as long as a typed turn takes. Nothing is heard meanwhile.
+2. The assistant thinks: as long as a typed turn takes. Nothing is heard meanwhile. With Keep listening
+   on, after three seconds the voice says "One moment." (or "Let me check.", "Working on it."), so you
+   know you were heard without looking.
 3. The answer is spoken: its spoken summary, one to three sentences, not the tables and commands of the
    written answer, which stays in the conversation to read. The first sentence starts about 0.15 s after
    the answer arrives (the voice is loaded while the assistant thinks), and each next sentence is made

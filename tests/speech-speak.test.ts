@@ -150,3 +150,27 @@ test('the avatar that is shown speaks in the free voice its character file names
   assert.match(loop, /if \(!window\.wsAssistantAvatarOn \|\| !window\.wsAssistantAvatarOn\(\) \|\| !window\.wsAvatarId\) return '';/, 'only the avatar that is shown');
   assert.match(loop, /\^en_\[A-Z\]\{2\}-\[a-z0-9_\]\+-\(x_low\|low\|medium\|high\)\$/, 'and only an English Piper voice by name');
 });
+
+test('a few words on the side while the assistant thinks: no state changes, and the answer cuts them short', async () => {
+  const p = page({ clipMs: 80 });
+  assert.strictEqual(p.mouth.aside('One moment.'), true);
+  await wait(10);
+  assert.deepStrictEqual(p.fetched, ['One moment.']);
+  assert.deepStrictEqual(p.started, ['One moment.']);
+  assert.deepStrictEqual(p.events, [], 'the mouth of the avatar is not told: it is not the answer');
+  assert.deepStrictEqual(p.shown, [], 'and the page\'s state does not change');
+  assert.strictEqual(p.done(), 0);
+  p.mouth.speak('Here is the answer.');
+  assert.strictEqual(p.stopLive().stopped, true, 'the answer stops the aside');
+  await wait(150);
+  assert.deepStrictEqual(p.started, ['One moment.', 'Here is the answer.']);
+  assert.strictEqual(p.done(), 1);
+  const busy = page({ clipMs: 60 });
+  busy.mouth.speak('An answer is being said.');
+  await wait(5);
+  assert.strictEqual(busy.mouth.aside('One moment.'), false, 'never over the answer itself');
+  assert.strictEqual(page({ local: false, browser: false }).mouth.aside('One moment.'), false);
+  const loop = fs.readFileSync(path.join(PKG, 'public', 'speech-loop.js'), 'utf8');
+  assert.match(loop, /if \(s\.acknowledge && mouth && spokenTurn !== 'hold'\)/, 'hands-free only: never after Hold to talk');
+  assert.match(loop, /if \(expecting && state === 'thinking'\) \{ mouth\.aside\(/, 'only while the answer is still on its way');
+});

@@ -18,11 +18,16 @@
   const chat = document.getElementById('ws-deep-chat');
   if (!core || !chat || window.wsSpeech) return;
 
+  // What carries a conversation from one page to the next: the moment the page was left with the
+  // microphone on, and what was still to be said. The dashboard's pages are on an address of their own
+  // for each workspace, so this is kept the way the dashboard keeps a choice across them (window.wsPref),
+  // and it is only good for a few seconds: a page opened later starts with the microphone closed.
   const KEEP = 'ws-speech-keep';
   const REST = 'ws-speech-rest';
+  const CARRY_MS = 15000;
   const store = {
-    get: (k) => { try { return window.sessionStorage.getItem(k); } catch (_) { return null; } },
-    set: (k, v) => { try { if (v === null) window.sessionStorage.removeItem(k); else window.sessionStorage.setItem(k, v); } catch (_) { /* not kept */ } },
+    get: (k) => { try { return window.wsPref ? window.wsPref(k, '') : ''; } catch (_) { return ''; } },
+    set: (k, v) => { try { if (window.wsPrefSet) window.wsPrefSet(k, v === null ? '' : String(v)); } catch (_) { /* not kept */ } },
   };
   const trace = [];
   const mark = (ev, more) => { trace.push({ t: Math.round(performance.now()), ev, ...(more || {}) }); if (trace.length > 200) trace.shift(); };
@@ -82,6 +87,9 @@
     let expecting = false;       // a turn that was spoken is on its way: its answer is spoken too
     let followUpUntil = 0;
     let silenceNext = false;     // Stop was pressed while an answer was on its way
+    const ACKS = ['One moment.', 'Let me check.', 'Working on it.'];
+    let ackTimer = null; let ackAt = 0;
+    let spokenTurn = '';         // how the turn that is on its way was said: 'keep' or 'hold'
     let noticeTimer = null;
 
     function setState(next, text) {
@@ -231,11 +239,17 @@
         text = w.rest;
       }
       expecting = true; silenceNext = false;
+      spokenTurn = mode === 'keep' ? 'keep' : 'hold';
       mark('sent', { text });
       if (!window.wsAssistantSend || !window.wsAssistantSend(text)) { expecting = false; return settle('The assistant is not on this page.'); }
-      if (mode === 'keep' && !s.conversation) { mode = 'off'; store.set(KEEP, null); closeMic(); }
+      if (mode === 'keep' && !s.conversation) { mode = 'off'; closeMic(); }
       setState('thinking', text);
       if (mouth && mouth.warm) mouth.warm();
+      // Hands-free, nobody is looking at the page: when the answer takes a while, a few words say it was heard.
+      clearTimeout(ackTimer);
+      if (s.acknowledge && mouth && spokenTurn !== 'hold') {
+        ackTimer = setTimeout(() => { if (expecting && state === 'thinking') { mouth.aside(ACKS[ackAt % ACKS.length]); ackAt += 1; } }, s.acknowledgeAfterMs);
+      }
     }
 
     // ---- The browser's own recogniser, when it is the engine --------------------------------------
@@ -305,9 +319,9 @@
       if (!on) return allOff('');
       if (mode === 'keep') return;
       if (mode === 'hold') return;
-      if (stt === 'browser') { mode = 'keep'; store.set(KEEP, '1'); browserListen(true); return setState('listening', ''); }
+      if (stt === 'browser') { mode = 'keep'; browserListen(true); return setState('listening', ''); }
       if (!(await openMic())) return;
-      mode = 'keep'; store.set(KEEP, '1');
+      mode = 'keep';
       vad.reset(); vad.setBoost(state === 'speaking' ? 2.5 : 1);
       if (state !== 'speaking' && state !== 'thinking') setState('listening', s.wakeWord ? `Say "${s.wakePhrase}" first.` : '');
       else setState(state);
@@ -316,6 +330,7 @@
     function allOff(text) {
       // An answer still on its way after Stop is not spoken, by this voice or by the page's summary voice.
       if (expecting) silenceNext = true;
+      clearTimeout(ackTimer);
       stopSpeaking();
       mode = 'off'; expecting = false; store.set(KEEP, null); store.set(REST, null);
       closeMic();
@@ -357,6 +372,7 @@
       if (silenceNext) { silenceNext = false; e.preventDefault(); mark('answer-silenced'); return; }
       if (!active()) return;                 // a typed turn: the page's own summary voice, as before
       expecting = false;
+      clearTimeout(ackTimer);
       mark('answer', { spoken: Boolean(e.detail && e.detail.spoken) });
       if (!tts) return settle('');
       e.preventDefault();
@@ -364,7 +380,7 @@
       speakText(d.spoken || core.speakable(d.html));
     });
     document.addEventListener('ws-assistant-working', (e) => {
-      if (e.detail && e.detail.failed && expecting) { expecting = false; settle('The assistant did not answer.'); }
+      if (e.detail && e.detail.failed && expecting) { expecting = false; clearTimeout(ackTimer); settle('The assistant did not answer.'); }
     });
 
     bar.querySelector('.ws-speech-stop').addEventListener('click', () => allOff(''));
@@ -372,7 +388,9 @@
     // What was being said when the page changed (the assistant took you somewhere) is finished on the next page.
     window.addEventListener('pagehide', () => {
       const left = mouth ? mouth.rest() : '';
-      if (state === 'speaking' && left) store.set(REST, JSON.stringify({ at: Date.now(), text: left }));
+      if (state === 'speaking' && left) store.set(REST, JSON.stringify({ at: Date.now(), text: left.slice(0, 500) }));
+      // Left with the microphone on: the next page, within a few seconds, goes on listening.
+      if (mode === 'keep') store.set(KEEP, String(Date.now()));
       closeMic();
     });
 
@@ -400,18 +418,23 @@
     setState('off');
     mark('ready', { stt, tts });
 
-    // The same tab, the microphone already allowed, and it was on a moment ago: it stays on across pages.
+    // The page before this one was left a moment ago with the microphone on (the assistant took the person
+    // to another page, or they went themselves): it goes on here, once, when the browser already allows
+    // the microphone for this address. Where it does not yet, the person is told, and presses the button.
     let rest = null;
     try { rest = JSON.parse(store.get(REST) || 'null'); } catch (_) { rest = null; }
-    store.set(REST, null);
-    const resume = () => {
-      if (store.get(KEEP) === '1' && stt && s.handsFree) keep(true).then(() => { if (rest && Date.now() - rest.at < 20000 && tts) speakText(rest.text); });
-      else if (rest && Date.now() - rest.at < 20000 && tts) speakText(rest.text);
-    };
-    if (store.get(KEEP) === '1' || rest) {
+    const carried = Date.now() - Number(store.get(KEEP) || 0) < CARRY_MS;
+    store.set(REST, null); store.set(KEEP, null);
+    const sayRest = () => { if (rest && rest.text && Date.now() - Number(rest.at) < CARRY_MS + 5000 && tts) speakText(String(rest.text)); };
+    if (carried && stt && s.handsFree) {
+      const go = () => keep(true).then(sayRest);
       if (stt === 'local' && navigator.permissions && navigator.permissions.query) {
-        navigator.permissions.query({ name: 'microphone' }).then((p) => { if (p.state === 'granted') resume(); else store.set(KEEP, null); }).catch(() => store.set(KEEP, null));
-      } else resume();
-    }
+        navigator.permissions.query({ name: 'microphone' }).then((p) => {
+          if (p.state === 'granted') return go();
+          notice('The microphone was on. Press Keep listening to go on here: the browser asks once for each workspace\'s address.', 12000);
+          return sayRest();
+        }).catch(sayRest);
+      } else go();
+    } else sayRest();
   }
 }());
