@@ -57,6 +57,12 @@ Druplicon, with its model, its moves, its agent and its free voice read from its
 never copied into the dashboard (the base after 1.0.10). The character file, a project's own moves and
 how to have a new move written: [docs/characters.md](docs/characters.md).
 
+## The board
+
+The assistant's board becomes a working board: shapes, text, pictures, moving and erasing, pages, four
+looks, a PNG to download and **To the workspace** (`designs/boards/`). It stays in the browser until
+someone saves it. The tools and what is kept where: [docs/board.md](docs/board.md).
+
 ## Speech for the AI Assistant
 
 Talk to the assistant and hear it answer, speech to speech: Hold to talk, Keep listening (hands-free,

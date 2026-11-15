@@ -234,7 +234,7 @@ test('the manifest ships the speech files, every setting has a label, and the co
   const m = pkg.workspacePlugin;
   for (const f of [...m.js, ...m.css, ...m.scripts.functions, ...m.scripts.args, m.settingsTemplate, m.labels]) assert.ok(fs.existsSync(path.join(PKG, f)), `${f} is in the package`);
   for (const dir of ['public', 'scripts', 'config']) assert.ok(pkg.files.includes(dir), `${dir}/ ships`);
-  assert.deepStrictEqual(m.js, ['public/speech-core.js', 'public/speech-speak.js', 'public/speech-loop.js'], 'the rules, then the voice, then the loop that uses both');
+  assert.deepStrictEqual(m.js.slice(0, 3), ['public/speech-core.js', 'public/speech-speak.js', 'public/speech-loop.js'], 'the rules, then the voice, then the loop that uses both');
   assert.ok(m.workspace.files.includes('commands/cmd-tools-avatar-speech.sh'));
   assert.strictEqual(pkg.optionalDependencies['sherpa-onnx-node'], '1.13.8', 'the engine is optional and pinned');
   assert.ok(!pkg.dependencies || !pkg.dependencies['sherpa-onnx-node']);
