@@ -18,6 +18,11 @@ Then, in the assistant's panel:
 | Press **Keep listening** (the round microphone) | Hands-free: each phrase is cut at a short silence and sent, and it listens again |
 | Say **stop**, press **Stop**, or press Escape | The voice stops and the microphone closes |
 
+With **Keep listening** on it is a conversation, speech to speech: you speak, your words appear as you
+say them, the assistant thinks, and its answer is spoken sentence by sentence in the local voice. Then
+it listens again, turn after turn. Start talking while it speaks and the voice stops to listen
+(barge-in). After Hold to talk the answer is spoken too, and the microphone stays closed.
+
 The first press asks the browser's own permission question. The line above the buttons says what the
 assistant is doing (Listening, Hearing you, Transcribing, Thinking, Speaking), shows your words while
 you speak, and carries a red dot for as long as the microphone is open.
@@ -85,6 +90,20 @@ bash cmd-tools-avatar-speech.sh -a install --stt none --voice en_GB-alan-medium
 bash cmd-tools-avatar-speech.sh -a remove --voice en_GB-alan-medium
 ```
 
+## What you hear, and when
+
+1. You stop talking. After the silence that ends a phrase (0.9 s, `speech.silence_ms`) the phrase is
+   transcribed: about 0.3 s for a short sentence.
+2. The assistant thinks: as long as a typed turn takes. Nothing is heard meanwhile.
+3. The answer is spoken: its spoken summary, one to three sentences, not the tables and commands of the
+   written answer, which stays in the conversation to read. The first sentence starts about 0.15 s after
+   the answer arrives (the voice is loaded while the assistant thinks), and each next sentence is made
+   while the one before it plays.
+4. It listens again. Say **stop** on its own to end.
+
+The answer is not spoken word by word while it is being written: the assistant's answer reaches the
+page in one piece, and is spoken from that moment.
+
 ## What was measured
 
 On a 16-thread laptop, CPU only, English sentences of 2.3 seconds spoken by a Piper voice:
@@ -95,4 +114,6 @@ On a 16-thread laptop, CPU only, English sentences of 2.3 seconds spoken by a Pi
 | `whisper-tiny.en` | 0.15 s | 4 of 5: the lone "Stop." was misheard |
 | `moonshine-tiny-en` | 0.03 s | 3 of 5: two wrong words |
 
-The local voice makes 2.8 seconds of speech in 0.13 seconds.
+The local voice makes 2.8 seconds of speech in 0.13 seconds. In the browser: a spoken question was
+transcribed 0.38 s after the phrase ended; the first spoken sentence started 0.10 to 0.15 s after the
+answer arrived; talking over the voice stopped it within 0.15 s of the first sound.

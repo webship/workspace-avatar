@@ -234,7 +234,7 @@ test('the manifest ships the speech files, every setting has a label, and the co
   const m = pkg.workspacePlugin;
   for (const f of [...m.js, ...m.css, ...m.scripts.functions, ...m.scripts.args, m.settingsTemplate, m.labels]) assert.ok(fs.existsSync(path.join(PKG, f)), `${f} is in the package`);
   for (const dir of ['public', 'scripts', 'config']) assert.ok(pkg.files.includes(dir), `${dir}/ ships`);
-  assert.strictEqual(m.js[0], 'public/speech-core.js', 'the rules load before the loop');
+  assert.deepStrictEqual(m.js, ['public/speech-core.js', 'public/speech-speak.js', 'public/speech-loop.js'], 'the rules, then the voice, then the loop that uses both');
   assert.ok(m.workspace.files.includes('commands/cmd-tools-avatar-speech.sh'));
   assert.strictEqual(pkg.optionalDependencies['sherpa-onnx-node'], '1.13.8', 'the engine is optional and pinned');
   assert.ok(!pkg.dependencies || !pkg.dependencies['sherpa-onnx-node']);
@@ -258,7 +258,7 @@ test('privacy, as code: one place opens the microphone, nothing records or store
   assert.deepStrictEqual([...loop.matchAll(/await openMic\(\)/g)].length, 2);
   assert.match(loop, /p\.state === 'granted'\) resume\(\)/);
   for (const never of ['MediaRecorder', 'localStorage', 'indexedDB', 'video:', 'xi-api-key', 'elevenlabs', 'api_key']) {
-    for (const f of ['speech-loop.js', 'speech-core.js']) assert.ok(!fs.readFileSync(path.join(PKG, 'public', f), 'utf8').includes(never), `${f} has no ${never}`);
+    for (const f of ['speech-loop.js', 'speech-core.js', 'speech-speak.js']) assert.ok(!fs.readFileSync(path.join(PKG, 'public', f), 'utf8').includes(never), `${f} has no ${never}`);
   }
   assert.match(loop, /silent\.gain\.value = 0/, 'the microphone is never played back');
   const server = ['speech.ts', 'speech-engine.ts', 'speech-worker.ts'].map((f) => fs.readFileSync(path.join(PKG, 'src', f), 'utf8')).join('\n');

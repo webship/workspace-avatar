@@ -52,8 +52,10 @@ The bash functions these commands call live in the dashboard's `core/scripts/fun
 
 ## Speech for the AI Assistant
 
-Talk to the assistant and hear it answer: Hold to talk, Keep listening (hands-free, cut at a silence),
-a live text while you speak, and the words sent as your turn. English only, free, and switched part
+Talk to the assistant and hear it answer, speech to speech: Hold to talk, Keep listening (hands-free,
+cut at a silence), a live text while you speak, the words sent as your turn, the answer spoken sentence
+by sentence, and a conversation that goes on turn after turn. Talk over the voice and it stops to listen;
+say "stop" and it ends. English only, free, and switched part
 by part in `core/config/plugin.avatar.settings.yml`. With the local models
 (`bash avatars/cmd-tools-avatar-speech.sh -a install`) the audio never leaves the machine. How it
 works, where the audio goes for each engine, the licences and what was measured: [docs/speech.md](docs/speech.md).
