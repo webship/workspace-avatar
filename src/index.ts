@@ -1,10 +1,12 @@
 /**
  * The Avatars plugin for Webship Workspace.
  *
- * Two things. The `avatars/` folder as a workspace: its settings file, its commands, its docs and its AI
+ * Three things. The `avatars/` folder as a workspace: its settings file, its commands, its docs and its AI
  * items (each in the folder of its kind) are placed by the installer from the manifest. And speech for the AI Assistant: the person talks, the
  * words are transcribed, the assistant answers and the answer is spoken (public/speech-*.js in the
- * page, src/speech*.ts here). Each part of speech has a switch in the plugin's own settings file.
+ * page, src/speech*.ts here). Each part of speech has a switch in the plugin's own settings file. And the
+ * board's tools: shapes, text, pictures, pages, looks and saving, added to the dashboard's board
+ * (public/board-*.js, src/board.ts).
  */
 
 import type { ServerResponse } from 'http';
@@ -12,6 +14,7 @@ import type { PluginApi } from '@webship.co/workspace-plugin-api';
 
 import { SpeechEngine } from './speech-engine';
 import { hear, speak, speechConfig } from './speech';
+import { boardSave, BOARD_MAX_BYTES } from './board';
 
 export const WORKSPACE_KEY = 'avatars';
 
@@ -51,5 +54,7 @@ export function register(api: PluginApi): void {
   if (typeof more.addUpload === 'function' && api.capabilities && api.capabilities.has('uploads')) {
     more.addUpload('hear', (ctx) => hear(ctx, settings(), root, engine), { maxBytes: 16000 * 2 * 60 });
     more.addUpload('speak', (ctx) => speak(ctx, settings(), root, engine), { maxBytes: 8 * 1024 });
+    // The board's "To the workspace": written only when a person presses the button.
+    more.addUpload('board-save', (ctx) => boardSave(ctx, api.lib), { maxBytes: BOARD_MAX_BYTES });
   }
 }

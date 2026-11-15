@@ -17,7 +17,7 @@ test('the manifest names the workspace folder, and every file it names ships', (
   for (const f of m.workspace.files) assert.match(fs.readFileSync(path.join(PKG, f), 'utf8'), /^#!\/usr\/bin\/env bash/, `${f} is a bash script`);
 });
 
-test('register() adds the assistant context, the speech config fragment and the two speech uploads', () => {
+test('register() adds the assistant context, the speech config fragment and the uploads', () => {
   const calls: string[] = [];
   const uploads: string[] = [];
   let fragment: ((ctx: any) => unknown) | null = null;
@@ -30,7 +30,7 @@ test('register() adds the assistant context, the speech config fragment and the 
   register(api);
   assert.strictEqual(calls.length, 1);
   assert.match(calls[0], /avatars\//);
-  assert.deepStrictEqual(uploads, ['hear', 'speak']);
+  assert.deepStrictEqual(uploads, ['hear', 'speak', 'board-save']);
   let sent = '';
   const res: any = { writeHead: () => res, end: (b: string) => { sent = b; } };
   fragment!({ rest: 'speech/config', res });

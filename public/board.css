@@ -1,0 +1,45 @@
+/* The board's second row of tools, and its looks. */
+.ws-board-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 0;
+  border-top: 1px solid var(--border-default, rgba(127, 127, 127, 0.3));
+  font-size: 0.8125rem;
+}
+.ws-board-tools .avatar-chip[aria-pressed="true"] { outline: 2px solid var(--link, #06c); outline-offset: 1px; }
+.ws-board-tools .avatar-chip:disabled { opacity: 0.45; cursor: default; }
+.ws-board-pages { display: inline-flex; align-items: center; gap: 6px; }
+.ws-board-page { min-width: 5.5em; text-align: center; }
+.ws-board-look { display: inline-flex; align-items: center; gap: 4px; }
+.ws-board-look select { font: inherit; padding: 2px 4px; border-radius: 6px; border: 1px solid var(--border-default, rgba(127, 127, 127, 0.4)); background: var(--surface-default, #fff); color: inherit; }
+.ws-board-said { flex: 1 1 100%; min-height: 1.2em; color: var(--text-subtle, #667); }
+.ws-board-said:empty { display: none; }
+.ws-board-typing {
+  position: absolute;
+  z-index: 3;
+  width: 160px;
+  padding: 3px 6px;
+  font: inherit;
+  border: 1px solid var(--link, #06c);
+  border-radius: 6px;
+  background: var(--surface-default, #fff);
+  color: var(--text-default, #111);
+}
+.avatar-board-area[data-tool]:not([data-tool=""]) .avatar-board-svg { cursor: crosshair; touch-action: none; }
+.avatar-board-area[data-tool="move"]:not([data-tool=""]) .avatar-board-svg { cursor: move; }
+.avatar-board-area[data-tool="erase"]:not([data-tool=""]) .avatar-board-svg { cursor: not-allowed; }
+.avatar-board-area[data-tool="text"]:not([data-tool=""]) .avatar-board-svg { cursor: text; }
+.avatar-board-area[data-tool="move"] .avatar-board-svg > *:not(defs),
+.avatar-board-area[data-tool="erase"] .avatar-board-svg > *:not(defs) { pointer-events: all; }
+/* The looks: the surface behind the drawing. */
+.avatar-board-area[data-look="whiteboard"] .avatar-board-svg { background: #fff; }
+.avatar-board-area[data-look="chalkboard"] .avatar-board-svg { background: #23402f; color: #f4f1e8; }
+.avatar-board-area[data-look="chalkboard"] .avatar-board-label { fill: #f4f1e8; }
+.avatar-board-area[data-look="grid"] .avatar-board-svg {
+  background: #fff linear-gradient(rgba(43, 68, 124, 0.12) 1px, transparent 1px) 0 0 / 5% 8.333%,
+    #fff linear-gradient(90deg, rgba(43, 68, 124, 0.12) 1px, transparent 1px) 0 0 / 5% 8.333%;
+  background-blend-mode: multiply;
+}
+.avatar-board-area[data-look="dots"] .avatar-board-svg { background: #fff radial-gradient(rgba(43, 68, 124, 0.35) 1px, transparent 1.5px) 0 0 / 5% 8.333%; }

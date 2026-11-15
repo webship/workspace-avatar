@@ -74,7 +74,8 @@
     },
     "features": [
       "features/avatar.feature",
-      "features/avatar-speech.feature"
+      "features/avatar-speech.feature",
+      "features/avatar-board.feature"
     ],
     "scripts": {
       "functions": [
@@ -85,12 +86,15 @@
       ]
     },
     "css": [
-      "public/speech.css"
+      "public/speech.css",
+      "public/board.css"
     ],
     "js": [
       "public/speech-core.js",
       "public/speech-speak.js",
-      "public/speech-loop.js"
+      "public/speech-loop.js",
+      "public/board-core.js",
+      "public/board-tools.js"
     ]
   },
   "devDependencies": {
