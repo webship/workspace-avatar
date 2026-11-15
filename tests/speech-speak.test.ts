@@ -11,9 +11,10 @@ const core = require(path.join(PKG, 'public', 'speech-core.js'));
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 /** The voice script in a page that is not there: a fake audio output, a fake server, a fake browser voice. */
-function page({ local = true, browser = true, failAt = -1, clipMs = 30 } = {}) {
+function page({ local = true, browser = true, failAt = -1, clipMs = 30, avatarVoice = undefined as undefined | (() => string) } = {}) {
   const events: string[] = [];
   const fetched: string[] = [];
+  const voices: string[] = [];
   const started: string[] = [];
   const uttered: string[] = [];
   let live: any = null;
@@ -36,6 +37,7 @@ function page({ local = true, browser = true, failAt = -1, clipMs = 30 } = {}) {
     fetch: (url: string, init: any) => {
       const text = JSON.parse(init.body).text;
       fetched.push(text);
+      voices.push(JSON.parse(init.body).voice || '');
       const n = fetched.filter((t) => t !== 'Ready.').length - 1;
       if (url !== '/actions/p/avatar/speak' || (failAt >= 0 && n >= failAt && text !== 'Ready.')) return Promise.resolve({ ok: false, status: 409 });
       return Promise.resolve({ ok: true, headers: { get: () => '12' }, arrayBuffer: () => Promise.resolve({ text }) });
@@ -46,9 +48,9 @@ function page({ local = true, browser = true, failAt = -1, clipMs = 30 } = {}) {
   const shown: string[] = [];
   let done = 0;
   const cfg = { settings: { ttsEngine: 'auto', language: 'en-US', speed: 1 }, tts: { local } };
-  const mouth = window.wsSpeechMouth.create({ cfg, core, mark: (ev: string) => marks.push(ev), audioContext: () => null,
+  const mouth = window.wsSpeechMouth.create({ cfg, core, mark: (ev: string) => marks.push(ev), audioContext: () => null, avatarVoice,
     onStart: (s: string) => shown.push(`start:${s}`), onSentence: (s: string) => shown.push(s), onDone: () => { done += 1; } });
-  return { mouth, events, fetched, started, uttered, marks, shown, stopLive: () => live, done: () => done };
+  return { mouth, events, fetched, voices, started, uttered, marks, shown, stopLive: () => live, done: () => done };
 }
 
 test('the local voice says an answer sentence by sentence, each made while the one before it plays', async () => {
@@ -131,4 +133,20 @@ test('the loop wires the voice in: a spoken turn asks for a speakable answer, ta
   assert.match(loop, /if \(state === 'thinking' \|\| state === 'transcribing'\) \{ vad\.reset\(\); return; \}/, 'nothing is heard while the assistant thinks');
   assert.match(loop, /if \(silenceNext\) \{ silenceNext = false; e\.preventDefault\(\);/, 'an answer that arrives after Stop is not spoken');
   assert.match(loop, /if \(mode === 'keep'\) \{ vad\.setBoost\(1\); vad\.reset\(\); setState\('listening', text\); \}/, 'after the answer it listens again');
+});
+
+test('the avatar that is shown speaks in the free voice its character file names; otherwise the voice of the settings is used', async () => {
+  const named = page({ avatarVoice: () => 'en_GB-alba-medium' });
+  named.mouth.speak('Hello there.');
+  await wait(5);
+  assert.deepStrictEqual(named.voices, ['en_GB-alba-medium']);
+  const none = page({ avatarVoice: () => '' });
+  none.mouth.speak('Hello there.');
+  await wait(5);
+  assert.deepStrictEqual(none.voices, [''], 'no voice is named: the dashboard uses the one in the settings');
+  const broken = page({ avatarVoice: () => { throw new Error('no cast'); } });
+  assert.strictEqual(broken.mouth.speak('Hello there.'), true);
+  const loop = fs.readFileSync(path.join(PKG, 'public', 'speech-loop.js'), 'utf8');
+  assert.match(loop, /if \(!window\.wsAssistantAvatarOn \|\| !window\.wsAssistantAvatarOn\(\) \|\| !window\.wsAvatarId\) return '';/, 'only the avatar that is shown');
+  assert.match(loop, /\^en_\[A-Z\]\{2\}-\[a-z0-9_\]\+-\(x_low\|low\|medium\|high\)\$/, 'and only an English Piper voice by name');
 });
