@@ -5,12 +5,15 @@ Feature: Speech for the AI Assistant
   Scenario: The page is told which parts of speech are on
     Given I am on "/fragments/p/avatar/speech/config"
      Then I should see "microphone"
+      And I should see "speaking"
+      And I should see "bargeIn"
       And I should see "sttEngine"
       And I should see "cmd-tools-avatar-speech.sh"
 
   Scenario: The speech scripts are loaded with the assistant
     Given I am on "/avatars"
      Then "script[src^='/plugin-js/avatar/speech-core.js']" should be attached
+      And "script[src^='/plugin-js/avatar/speech-speak.js']" should be attached
       And "script[src^='/plugin-js/avatar/speech-loop.js']" should be attached
       And ".ws-speech" should be attached
 

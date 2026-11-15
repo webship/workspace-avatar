@@ -1,7 +1,7 @@
 {
   "name": "@webship.co/workspace-avatar",
   "version": "1.0.8",
-  "description": "The Avatars plugin for Webship Workspace: the `avatars/` folder (type code), its settings file, its 9 commands, its docs and its AI items (an agent, a skill, a command and a prompt, each in the folder of its kind), and speech for the AI Assistant (talk to it with a recogniser on this machine or the browser's own), activated as a plugin.",
+  "description": "The Avatars plugin for Webship Workspace: the `avatars/` folder (type code), its settings file, its 9 commands, its docs and its AI items (an agent, a skill, a command and a prompt, each in the folder of its kind), and speech to speech for the AI Assistant (talk to it and hear it answer, with a recogniser and a voice on this machine or the browser's own), activated as a plugin.",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "license": "ISC",
@@ -89,6 +89,7 @@
     ],
     "js": [
       "public/speech-core.js",
+      "public/speech-speak.js",
       "public/speech-loop.js"
     ]
   },
