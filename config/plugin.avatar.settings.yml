@@ -1,0 +1,44 @@
+# Avatars: core/config/plugin.avatar.settings.yml
+#
+# Speech for the AI Assistant: talk to it and hear it answer. English only.
+#
+# Nothing here turns the microphone on. That is always your own click on a talk button, with the
+# browser's own permission question, and a red dot shows for as long as it is open. Nothing that is
+# said is recorded or saved. Every part has its own switch; a part that is off is refused by the
+# dashboard as well as hidden in the page.
+#
+# Engines. `auto` uses this machine's own models when they are installed
+# (bash avatars/cmd-tools-avatar-speech.sh -a install: free, no key, the audio never leaves this
+# machine) and the browser's own speech otherwise (free, no key; the browser sends the audio to its
+# vendor's speech service). No paid engine is used here.
+speech:
+  # The talk buttons in the assistant: Hold to talk and Keep listening. false removes them.
+  microphone: true
+  # Keep listening: each phrase is cut at a short silence and sent, with no button held.
+  hands_free: true
+  # Conversation: after an answer is spoken, listen for the next turn.
+  conversation: true
+  # The answer is spoken, sentence by sentence.
+  speaking: true
+  # Start talking while the answer is spoken and the voice stops to listen.
+  barge_in: true
+  # Only speech that begins with the wake phrase is acted on; the rest is heard and let go.
+  wake_word: false
+  wake_phrase: workspace
+  # After an answer, this many seconds in which the wake phrase is not needed again.
+  follow_up_seconds: 12
+  # Said on its own, this word stops the voice and turns the microphone off.
+  stop_word: stop
+  # Speech to text: auto, local or browser.
+  stt_engine: auto
+  # The local recogniser: whisper-base.en, whisper-tiny.en or moonshine-tiny-en, once installed.
+  stt_model: whisper-base.en
+  # Text to speech: auto, local or browser.
+  tts_engine: auto
+  # The local voice: a Piper voice, once installed.
+  voice: en_US-ljspeech-medium
+  speed: 1
+  # How long a silence ends a phrase, in milliseconds.
+  silence_ms: 900
+  # en-US or en-GB: what the browser's own recogniser and voice are asked for.
+  language: en-US

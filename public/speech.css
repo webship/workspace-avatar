@@ -1,0 +1,56 @@
+/* Speech for the AI Assistant: the line that says what it is doing, above the talk buttons. */
+.ws-speech {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 28px;
+  padding: 4px 10px;
+  margin: 4px 0;
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  color: var(--text-default);
+  background: var(--surface-muted, rgba(127, 127, 127, 0.1));
+}
+.ws-speech[hidden] { display: none; }
+.ws-speech-dot {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--text-subtle, #888);
+}
+/* The red dot: the microphone is open. */
+.ws-speech.is-open .ws-speech-dot { background: var(--danger, #d33); }
+.ws-speech[data-state="hearing"] .ws-speech-dot { animation: ws-speech-pulse 0.9s ease-in-out infinite; }
+.ws-speech[data-state="thinking"] .ws-speech-dot,
+.ws-speech[data-state="transcribing"] .ws-speech-dot { animation: ws-speech-pulse 1.6s ease-in-out infinite; }
+/* Speaking with the microphone closed (after Hold to talk): blue. With it open the dot stays red. */
+.ws-speech[data-state="speaking"]:not(.is-open) .ws-speech-dot { background: var(--link, #06c); }
+.ws-speech-state { flex: none; font-weight: 600; }
+.ws-speech-state:empty { display: none; }
+.ws-speech-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ws-speech-text.is-interim { color: var(--text-subtle, #888); font-style: italic; }
+.ws-speech-stop {
+  flex: none;
+  border: 1px solid currentColor;
+  border-radius: 6px;
+  padding: 2px 10px;
+  font: inherit;
+  font-weight: 600;
+  color: var(--danger, #d33);
+  background: transparent;
+  cursor: pointer;
+}
+.ws-speech[data-state="off"] .ws-speech-stop { display: none; }
+.ws-speech-stop:focus-visible { outline: 2px solid var(--link, #06c); outline-offset: 2px; }
+.ws-speech-dock { display: flex; gap: 8px; padding: 6px 0; }
+.dock-mic.is-blocked { opacity: 0.5; }
+@keyframes ws-speech-pulse { 50% { transform: scale(1.5); opacity: 0.6; } }
+@media (prefers-reduced-motion: reduce) { .ws-speech-dot { animation: none !important; } }

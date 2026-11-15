@@ -63,6 +63,11 @@
     "--voice",
     "--voice-engine"
   ],
+  "cmd-tools-avatar-speech.sh": [
+    "--action",
+    "--stt",
+    "--voice"
+  ],
   "cmd-tools-avatar-voice.sh": [
     "--action",
     "--voice"

@@ -42,8 +42,21 @@ From its folder an item is installed into the AI CLI (Claude Code by default) li
 | `cmd-tools-avatar-catalog.sh` |
 | `cmd-tools-avatar-character.sh` |
 | `cmd-tools-avatar-voice.sh` |
+| `cmd-tools-avatar-speech.sh` |
 | `cmd-tools-reclaim.sh` |
 | `cmd-tools-remove.sh` |
 | `cmd-tools-screen.sh` |
 
-The bash functions these commands call live in the dashboard's `core/scripts/functions`.
+The bash functions these commands call live in the dashboard's `core/scripts/functions`, except
+`cmd-tools-avatar-speech.sh`, whose functions and arguments ship here (`scripts/`).
+
+## Speech for the AI Assistant
+
+Talk to the assistant and hear it answer: Hold to talk, Keep listening (hands-free, cut at a silence),
+a live text while you speak, and the words sent as your turn. English only, free, and switched part
+by part in `core/config/plugin.avatar.settings.yml`. With the local models
+(`bash avatars/cmd-tools-avatar-speech.sh -a install`) the audio never leaves the machine. How it
+works, where the audio goes for each engine, the licences and what was measured: [docs/speech.md](docs/speech.md).
+
+It needs a dashboard that offers the `scripts`, `uploads`, `assistant-answer` and `assistant-ear`
+capabilities (the base after 1.0.10); on an older one the folder works and speech is simply not there.

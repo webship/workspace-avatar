@@ -1,7 +1,7 @@
 {
   "name": "@webship.co/workspace-avatar",
   "version": "1.0.8",
-  "description": "The Avatars workspace for Webship Workspace: the `avatars/` folder (type code), its settings file, its 8 commands, its docs and its AI items (an agent, a skill, a command and a prompt, each in the folder of its kind), activated as a plugin.",
+  "description": "The Avatars plugin for Webship Workspace: the `avatars/` folder (type code), its settings file, its 9 commands, its docs and its AI items (an agent, a skill, a command and a prompt, each in the folder of its kind), and speech for the AI Assistant (talk to it with a recogniser on this machine or the browser's own), activated as a plugin.",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "license": "ISC",
@@ -16,6 +16,8 @@
     "config",
     "docs",
     "features",
+    "public",
+    "scripts",
     "README.md"
   ],
   "scripts": {
@@ -27,6 +29,9 @@
   "workspacePlugin": {
     "name": "avatar",
     "label": "Avatars",
+    "settingsFile": "plugin.avatar.settings.yml",
+    "settingsTemplate": "config/plugin.avatar.settings.yml",
+    "labels": "config/settings.labels.yml",
     "needs": [
       "ai-agents",
       "ai-skills",
@@ -42,6 +47,7 @@
         "commands/cmd-tools-avatar-catalog.sh",
         "commands/cmd-tools-avatar-character.sh",
         "commands/cmd-tools-avatar-voice.sh",
+        "commands/cmd-tools-avatar-speech.sh",
         "commands/cmd-tools-reclaim.sh",
         "commands/cmd-tools-remove.sh",
         "commands/cmd-tools-screen.sh"
@@ -67,7 +73,23 @@
       ]
     },
     "features": [
-      "features/avatar.feature"
+      "features/avatar.feature",
+      "features/avatar-speech.feature"
+    ],
+    "scripts": {
+      "functions": [
+        "scripts/functions/fun-avatar-speech.sh"
+      ],
+      "args": [
+        "scripts/args/arg-avatar-speech.sh"
+      ]
+    },
+    "css": [
+      "public/speech.css"
+    ],
+    "js": [
+      "public/speech-core.js",
+      "public/speech-loop.js"
     ]
   },
   "devDependencies": {
@@ -77,5 +99,8 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "optionalDependencies": {
+    "sherpa-onnx-node": "1.13.8"
   }
 }
