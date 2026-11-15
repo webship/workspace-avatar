@@ -77,7 +77,8 @@
       "features/avatar-speech.feature",
       "features/avatar-board.feature",
       "features/avatar-camera.feature",
-      "features/avatar-browser.feature"
+      "features/avatar-browser.feature",
+      "features/avatar-roles.feature"
     ],
     "scripts": {
       "functions": [
