@@ -10,7 +10,7 @@
 (function () {
   if (window.wsSpeechMouth) return;
 
-  function create({ cfg, core, mark, audioContext, onStart, onSentence, onDone }) {
+  function create({ cfg, core, mark, audioContext, avatarVoice, onStart, onSentence, onDone }) {
     const s = cfg.settings;
     const engine = core.pickEngine(s.ttsEngine, { local: cfg.tts.local, browser: Boolean(window.speechSynthesis && window.SpeechSynthesisUtterance) });
     let gen = 0; let playing = null; let outCtx = null; let left = []; let wordTimer = null; let speaking = false;
@@ -25,7 +25,10 @@
       if (outCtx.state === 'suspended') outCtx.resume().catch(() => {});
       return outCtx;
     };
-    const fetchClip = (text) => fetch('/actions/p/avatar/speak', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text }) })
+    // The voice of the avatar that is shown, when its character file names a free local one and it is
+    // installed here (the dashboard checks); otherwise the voice of the settings.
+    const voiceNow = () => { try { return (typeof avatarVoice === 'function' && avatarVoice()) || ''; } catch (_) { return ''; } };
+    const fetchClip = (text) => fetch('/actions/p/avatar/speak', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text, ...(voiceNow() ? { voice: voiceNow() } : {}) }) })
       .then((r) => (r.ok ? r.arrayBuffer().then((buf) => ({ buf, ms: Number(r.headers.get('X-Speech-Ms')) || 0 })) : Promise.reject(new Error(String(r.status)))));
 
     function stop() {

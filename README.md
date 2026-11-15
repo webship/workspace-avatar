@@ -50,6 +50,13 @@ From its folder an item is installed into the AI CLI (Claude Code by default) li
 The bash functions these commands call live in the dashboard's `core/scripts/functions`, except
 `cmd-tools-avatar-speech.sh`, whose functions and arguments ship here (`scripts/`).
 
+## Characters in the AI Assistant
+
+Every character of an avatar project in `avatars/` is offered as the assistant's avatar beside the
+Druplicon, with its model, its moves, its agent and its free voice read from its project at run time and
+never copied into the dashboard (the base after 1.0.10). The character file, a project's own moves and
+how to have a new move written: [docs/characters.md](docs/characters.md).
+
 ## Speech for the AI Assistant
 
 Talk to the assistant and hear it answer, speech to speech: Hold to talk, Keep listening (hands-free,

@@ -27,6 +27,13 @@ bash cmd-tools-avatar-catalog.sh                         # voice engines, with l
 bash cmd-tools-remove.sh my-avatar                       # ddev delete, then the folder
 ```
 
+## A character beside the Druplicon
+
+Every character of a project in this folder is offered as the AI Assistant's avatar, beside the
+Druplicon: the robot button in the assistant's panel, the gear, then **Avatar**. Its body, its moves,
+its agent and its free voice are read from its project and served from there. The character file, the
+moves a project can bring and how to have a new move written: `characters.md` in the plugin's docs.
+
 ## Talk to the AI Assistant
 
 The assistant in the dashboard can be talked to and can answer aloud, with a recogniser and a voice on

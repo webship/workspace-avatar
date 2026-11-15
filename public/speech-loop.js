@@ -323,10 +323,22 @@
       if (text) notice(text, 3000);
     }
 
+    // The free local voice of the avatar that is shown, from the cast the dashboard drew (its character
+    // file names it); '' when the avatar is hidden, is the Druplicon, or names none.
+    function avatarVoice() {
+      if (!window.wsAssistantAvatarOn || !window.wsAssistantAvatarOn() || !window.wsAvatarId) return '';
+      const stage = document.querySelector('.assistant-avatar-stage');
+      let cast = null;
+      try { cast = JSON.parse((stage && stage.dataset.cast) || 'null'); } catch (_) { cast = null; }
+      const who = cast && Array.isArray(cast.avatars) ? cast.avatars.find((a) => a.id === window.wsAvatarId()) : null;
+      return who && /^en_[A-Z]{2}-[a-z0-9_]+-(x_low|low|medium|high)$/.test(String(who.voice || '')) ? who.voice : '';
+    }
+
     // ---- Speaking the answer: speech-speak.js, when it is loaded and a voice is there ------------------
     const mouth = s.speaking && window.wsSpeechMouth ? window.wsSpeechMouth.create({
       cfg, core, mark,
       audioContext: () => ctx,
+      avatarVoice,
       onStart: (sentence) => { setState('speaking', sentence); vad.reset(); vad.setBoost(2.5); },
       onSentence: (sentence) => { textEl.textContent = sentence; },
       onDone: () => { followUpUntil = Date.now() + s.followUpSeconds * 1000; settle(''); },
