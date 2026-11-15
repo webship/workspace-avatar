@@ -1,4 +1,10 @@
 # Labels for core/config/plugin.avatar.settings.yml, merged into the Settings page.
+roles.enabled:
+  label: The assistant's roles
+  info: The assistant is told what it can do here for development, testing, design, video production, audio production and documents, as the commands that are in this workspace's folders right now, with the rules that go with them. Off leaves it with what the dashboard tells it by itself.
+  options:
+    "true": "On: it knows the commands of each role"
+    "false": "Off"
 camera.enabled:
   label: Camera button
   info: The camera button in the avatar's tools, to show the assistant something. Off removes it, and the dashboard refuses any picture. The camera itself only opens on your own click, with the browser's permission question, and one still picture is sent only when you press "Look at this".

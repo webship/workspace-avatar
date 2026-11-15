@@ -77,6 +77,13 @@ The avatar's reading window gets the sites of this workspace, a page's sections,
 project's Webship-js tests, through its folder's own testing command). A site out on the web is only
 read. What it will and will not do: [docs/browser.md](docs/browser.md).
 
+## What the assistant can do here
+
+The assistant is told, at each turn, what it can do in this workspace for development, testing, design,
+video production, audio production and documents: the commands that are in the folders of each role
+right now, and the rules that go with them. Nothing is promised that is not there. What it is told on
+your machine is at `/fragments/p/avatar/roles`: [docs/roles.md](docs/roles.md).
+
 ## Speech for the AI Assistant
 
 Talk to the assistant and hear it answer, speech to speech: Hold to talk, Keep listening (hands-free,

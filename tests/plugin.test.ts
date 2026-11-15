@@ -23,15 +23,16 @@ test('register() adds the assistant context, the speech config fragment and the 
   const actions: string[] = [];
   let fragment: ((ctx: any) => unknown) | null = null;
   const api: any = {
-    name: 'avatar', lib: { ROOT: path.join(PKG, 'no-such-workspace'), localSite: () => null, readerAllowed: async () => '' }, settings: { read: () => ({}) }, capabilities: new Set(['uploads']),
+    name: 'avatar', lib: { ROOT: path.join(PKG, 'no-such-workspace'), localSite: () => null, readerAllowed: async () => '', loadWorkspaces: () => ({}), workspaceDir: () => '/nowhere' }, settings: { read: () => ({}) }, capabilities: new Set(['uploads']),
     addAction: (name: string) => actions.push(name),
     addAssistantContext: (fn: () => string) => calls.push(fn()),
     addFragment: (fn: (ctx: any) => unknown) => { fragment = fn; },
     addUpload: (name: string) => uploads.push(name),
   };
   register(api);
-  assert.strictEqual(calls.length, 1);
+  assert.strictEqual(calls.length, 2, 'the folder and speech, and the roles');
   assert.match(calls[0], /avatars\//);
+  assert.match(calls[1], /WHAT YOU CAN DO HERE, FOR THE TEAM/);
   assert.deepStrictEqual(uploads, ['hear', 'speak', 'board-save', 'look', 'look-forget', 'site-snap']);
   assert.deepStrictEqual(actions, ['site-test']);
   let sent = '';

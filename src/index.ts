@@ -1,7 +1,7 @@
 /**
  * The Avatars plugin for Webship Workspace.
  *
- * Five things. The `avatars/` folder as a workspace: its settings file, its commands, its docs and its AI
+ * Six things. The `avatars/` folder as a workspace: its settings file, its commands, its docs and its AI
  * items (each in the folder of its kind) are placed by the installer from the manifest. And speech for the AI Assistant: the person talks, the
  * words are transcribed, the assistant answers and the answer is spoken (public/speech-*.js in the
  * page, src/speech*.ts here). Each part of speech has a switch in the plugin's own settings file. And the
@@ -9,6 +9,8 @@
  * (public/board-*.js, src/board.ts). And the camera: one still
  * picture the person chooses to show the assistant with a turn (public/camera.js, src/camera.ts). And the reading window's tools: the workspace's own sites, a
  * section read aloud, a picture of a local page for the board, its tests (public/browser-*.js, src/browser.ts).
+ * And the roles: what the assistant is told it can do here for development, testing, design, video,
+ * audio and documents, as the commands that are in this workspace's folders right now (src/roles.ts).
  */
 
 import type { ServerResponse } from 'http';
@@ -19,6 +21,7 @@ import { hear, speak, speechConfig } from './speech';
 import { boardSave, BOARD_MAX_BYTES } from './board';
 import { Looks, cameraSettings, look, lookForget, lookTurn, LOOK_MAX_BYTES } from './camera';
 import { sitesList, siteOf, siteSnap, testPlan, type BrowserLib } from './browser';
+import { rolesContext, rolesEnabled, rolesHere } from './roles';
 
 export const WORKSPACE_KEY = 'avatars';
 
@@ -54,11 +57,16 @@ export function register(api: PluginApi): void {
   });
 
   api.addFragment(({ rest, res }) => {
-    if (!['speech/config', 'camera/config', 'sites'].includes(rest)) return (res as ServerResponse).writeHead(404, { 'Content-Type': 'text/plain' }).end('Not found');
-    const body = JSON.stringify(rest === 'sites' ? { sites: sitesOrNone() } : rest === 'camera/config' ? cameraSettings(settings()) : speechConfig(settings(), root, engine));
+    if (!['speech/config', 'camera/config', 'sites', 'roles'].includes(rest)) return (res as ServerResponse).writeHead(404, { 'Content-Type': 'text/plain' }).end('Not found');
+    // `roles` is what the assistant is told it can do here, for a person to read too.
+    const body = JSON.stringify(rest === 'roles' ? { enabled: rolesEnabled(settings()), roles: rolesHere(api.lib) }
+      : rest === 'sites' ? { sites: sitesOrNone() } : rest === 'camera/config' ? cameraSettings(settings()) : speechConfig(settings(), root, engine));
     (res as ServerResponse).writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' }).end(body);
     return undefined;
   });
+
+  // What the assistant can do here, role by role, read from the folders and commands that are here now.
+  api.addAssistantContext(() => (rolesEnabled(settings()) ? rolesContext(api.lib) : ''));
 
   // "Test this site": the folder's own Webship-js testing command, started the way the Tests menu starts it.
   api.addAction('site-test', async ({ form, send }) => {

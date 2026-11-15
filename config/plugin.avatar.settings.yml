@@ -8,6 +8,13 @@ camera:
   # The camera button in the avatar's tools. false removes it, and the dashboard refuses any picture.
   enabled: true
 
+# The roles: the assistant is told what it can do here for development, testing, design, video
+# production, audio production and documents, as the commands that are in this workspace's folders
+# right now. Nothing is promised that is not there.
+roles:
+  # false leaves the assistant with what the dashboard tells it by itself.
+  enabled: true
+
 # Speech for the AI Assistant: talk to it and hear it answer. English only.
 #
 # Nothing here turns the microphone on. That is always your own click on a talk button, with the
