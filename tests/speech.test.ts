@@ -274,3 +274,23 @@ test('English only: no other script in anything that ships, and the docs say whe
   const doc = fs.readFileSync(path.join(PKG, 'docs', 'speech.md'), 'utf8');
   for (const s of ['## Where the audio goes', 'browser vendor', 'Nothing: a phrase is transcribed in memory', 'GPL-3.0', 'MIT (OpenAI Whisper)', 'speech.microphone', 'speech.wake_word']) assert.ok(doc.includes(s), `speech.md says "${s}"`);
 });
+
+test('each switch is honoured in the page as well as on the server', () => {
+  const loop = fs.readFileSync(path.join(PKG, 'public', 'speech-loop.js'), 'utf8');
+  // microphone: no engine is picked, the buttons go, and an ear that does nothing keeps the browser's recogniser out.
+  assert.match(loop, /const stt = s\.microphone \? core\.pickEngine\(/);
+  assert.match(loop, /\} else if \(!s\.microphone\) \{[\s\S]{0,400}window\.wsAssistantEar = \{ hold\(\) \{\}, keep\(\) \{\}, keeping: \(\) => false \};\s+if \(talkBtn\) talkBtn\.hidden = true;\s+if \(keepBtn\) keepBtn\.hidden = true;/);
+  // hands_free: Keep listening is hidden and refuses.
+  assert.match(loop, /if \(keepBtn\) keepBtn\.hidden = !s\.handsFree;/);
+  assert.match(loop, /async function keep\(on\) \{\s+if \(!stt \|\| !s\.handsFree\) return;/);
+  // conversation: off closes the microphone after one phrase.
+  assert.match(loop, /if \(mode === 'keep' && !s\.conversation\) \{ mode = 'off'; store\.set\(KEEP, null\); closeMic\(\); \}/);
+  // speaking: no voice is created.
+  assert.match(loop, /const mouth = s\.speaking && window\.wsSpeechMouth \?/);
+  // wake_word and stop_word.
+  assert.match(loop, /if \(s\.wakeWord && mode === 'keep' && Date\.now\(\) > followUpUntil\)/);
+  assert.match(loop, /if \(core\.isStop\(text, s\.stopWord\)\)/);
+  // silence_ms reaches the detector, the language the browser's engines.
+  assert.match(loop, /core\.createVad\(\{ silenceMs: s\.silenceMs \}\)/);
+  assert.match(loop, /r\.lang = s\.language;/);
+});
