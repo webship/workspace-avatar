@@ -63,6 +63,13 @@ The assistant's board becomes a working board: shapes, text, pictures, moving an
 looks, a PNG to download and **To the workspace** (`designs/boards/`). It stays in the browser until
 someone saves it. The tools and what is kept where: [docs/board.md](docs/board.md).
 
+## The camera
+
+Show the assistant something: the camera button in the avatar's tools opens a window with the preview
+and **Camera on**; **Look at this** sends one still picture with the next thing you ask, and it is
+deleted when the answer comes. Opened only by a press, never recorded, switched by `camera.enabled`.
+What goes where: [docs/camera.md](docs/camera.md).
+
 ## Speech for the AI Assistant
 
 Talk to the assistant and hear it answer, speech to speech: Hold to talk, Keep listening (hands-free,

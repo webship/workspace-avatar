@@ -1,4 +1,10 @@
 # Labels for core/config/plugin.avatar.settings.yml, merged into the Settings page.
+camera.enabled:
+  label: Camera button
+  info: The camera button in the avatar's tools, to show the assistant something. Off removes it, and the dashboard refuses any picture. The camera itself only opens on your own click, with the browser's permission question, and one still picture is sent only when you press "Look at this".
+  options:
+    "true": "On: the camera button is offered"
+    "false": "Off: no camera"
 speech.microphone:
   label: Talk buttons
   info: Hold to talk and Keep listening in the assistant. Off removes them, and the dashboard refuses any audio. The microphone itself only opens on your own click, with the browser's permission question.

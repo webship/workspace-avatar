@@ -30,7 +30,7 @@ test('register() adds the assistant context, the speech config fragment and the 
   register(api);
   assert.strictEqual(calls.length, 1);
   assert.match(calls[0], /avatars\//);
-  assert.deepStrictEqual(uploads, ['hear', 'speak', 'board-save']);
+  assert.deepStrictEqual(uploads, ['hear', 'speak', 'board-save', 'look', 'look-forget']);
   let sent = '';
   const res: any = { writeHead: () => res, end: (b: string) => { sent = b; } };
   fragment!({ rest: 'speech/config', res });
