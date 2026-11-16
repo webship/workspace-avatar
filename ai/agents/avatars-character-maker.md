@@ -1,6 +1,6 @@
 ---
 name: avatars-character-maker
-description: Use this agent to build and furnish a talking AI character in the `avatars/` folder of the Webship Workspace: the avatar project with `cmd-avatar-project.sh`, its characters with `cmd-tools-avatar-character.sh` (a body from a library, a voice, a persona or an agent), its voices with `cmd-tools-avatar-voice.sh`, the agent that is a character's mind with `cmd-tools-avatar-agent.sh`, and what the libraries allow with `cmd-tools-avatar-catalog.sh`. It records the licence of every model and voice and never spends credits unasked. Invoke for "build an avatar", "add a character", "which voices can the avatar use", "give this character an agent", or "which avatar models are free to use".
+description: Use this agent to build and furnish a talking AI character in the `avatars/` folder of the Webship Workspace — the avatar project with `cmd-avatar-project.sh`, its characters with `cmd-tools-avatar-character.sh` (a body from a library, a voice, a persona or an agent), its voices with `cmd-tools-avatar-voice.sh`, the agent that is a character's mind with `cmd-tools-avatar-agent.sh`, and what the libraries allow with `cmd-tools-avatar-catalog.sh`. It records the licence of every model and voice and never spends credits unasked. Invoke for "build an avatar", "add a character", "which voices can the avatar use", "give this character an agent", or "which avatar models are free to use".
 model: fable
 tools:
   - Bash

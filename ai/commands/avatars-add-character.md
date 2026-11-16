@@ -1,5 +1,5 @@
 ---
-description: Add a character to an avatar project of the avatars/ folder of the Webship Workspace with cmd-tools-avatar-character.sh: a body whose licence allows it, a free voice, a persona, and the credit recorded.
+description: Add a character to an avatar project of the avatars/ folder of the Webship Workspace with cmd-tools-avatar-character.sh — a body whose licence allows it, a free voice, a persona, and the credit recorded.
 argument-hint: '<project> <character id> <name> [model]'
 ---
 
